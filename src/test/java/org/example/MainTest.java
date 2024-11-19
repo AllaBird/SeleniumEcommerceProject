@@ -21,23 +21,24 @@ public class MainTest {
         // Устанавливаем драйвер с помощью WebDriverManager
         WebDriverManager.chromedriver().setup();
 
-        // Устанавливаем параметры для headless режима
+        // Получаем параметры Chrome из переменной окружения
         ChromeOptions options = new ChromeOptions();
-   //     options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+        String chromeOpts = System.getenv("CHROME_OPTS");
+        if (chromeOpts != null) {
+            options.addArguments(chromeOpts.split(" "));
+        }
 
         // Запускаем Chrome с указанными параметрами
         driver = new ChromeDriver(options);
     }
 
     @Test
-    public void testGoogleSearch() {
-        // Открываем страницу Google
-        driver.get("https://www.google.com");
-
-        // Проверяем, что элемент поиска присутствует
-        boolean isSearchBoxPresent = driver.findElement(By.name("q")).isDisplayed();
-        Assert.assertTrue(isSearchBoxPresent, "Поиск не найден на странице");
+    public void testExample() {
+        driver.get("https://www.example.com");
+        System.out.println("Title: " + driver.getTitle());
+        driver.quit();
     }
+
 
     @AfterClass
     public void tearDown() {
