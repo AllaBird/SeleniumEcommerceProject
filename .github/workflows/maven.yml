@@ -1,42 +1,30 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Java CI with Maven
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Клонирование репозитория
       - uses: actions/checkout@v4
-
-      # Шаг 2: Установка JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-
-      # Шаг 3: Установка зависимостей с помощью Maven
+      - name: Set Chrome options for CI
+        run: |
+          echo "Setting Chrome options for CI..."
+          echo "CHROME_OPTS=--headless --no-sandbox --disable-dev-shm-usage" >> $GITHUB_ENV
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-
-      # Шаг 4: Запуск тестов с помощью Maven
-      - name: Run tests with Maven
+      - name: Run Tests
         run: mvn test
-
-
-    
+        env:
+          CHROME_OPTS: ${{ secrets.CHROME_OPTS }}
