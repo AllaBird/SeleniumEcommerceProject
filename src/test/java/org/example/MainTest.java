@@ -33,10 +33,13 @@ public class MainTest {
     }
 
     @Test
-    public void testExample() {
-        driver.get("https://www.example.com");
-        System.out.println("Title: " + driver.getTitle());
-        driver.quit();
+    public void testGoogleSearch() {
+        // Открываем страницу Google
+        driver.get("https://www.google.com");
+
+        // Проверяем, что элемент поиска присутствует
+        boolean isSearchBoxPresent = driver.findElement(By.name("q")).isDisplayed();
+        Assert.assertTrue(isSearchBoxPresent, "Поиск не найден на странице");
     }
 
 
