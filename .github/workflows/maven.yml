@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,39 +20,24 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install Chrome and dependencies
+      - name: Install Chrome and ChromeDriver
         run: |
           sudo apt-get update
-          CHROME_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_114)
-          sudo apt-get install -y \
-            google-chrome-stable=$CHROME_VERSION-1 \
-            libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxcursor1 \
-            libxi6 libxtst6 libxrandr2 libasound2 \
-            libpangocairo-1.0-0 libgtk-3-0 xvfb
-
-      - name: Set up ChromeDriver
-        run: |
-          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_114)
+          sudo apt-get install -y wget unzip curl
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+          CHROME_DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
           wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip -d $HOME/chromedriver
           rm chromedriver_linux64.zip
           echo "$HOME/chromedriver" >> $GITHUB_PATH
 
-      - name: Start Xvfb
-        run: |
-          Xvfb :99 -screen 0 1280x1024x24 &
-        env:
-          DISPLAY: ":99.0"
+      - name: Run Tests with Maven
+        run: mvn test --file pom.xml
 
-      - name: Verify Chrome and ChromeDriver
-        run: |
-          google-chrome --version
-          chromedriver --version
-
-      - name: Build and Test with Maven
-        run: mvn -B test --file pom.xml
-        env:
-          DISPLAY: ":99.0"
 
 
 
