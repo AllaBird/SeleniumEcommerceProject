@@ -38,7 +38,7 @@ public class MainTest {
         driver.get("https://www.google.com");
 
         // Проверяем, что элемент поиска присутствует
-        boolean isSearchBoxPresent = driver.findElement(By.name("q")).isDisplayed();
+        boolean isSearchBoxPresent = driver.findElement(By.name("s")).isDisplayed();
         Assert.assertTrue(isSearchBoxPresent, "Поиск не найден на странице");
     }
 
