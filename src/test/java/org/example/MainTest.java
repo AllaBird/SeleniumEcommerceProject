@@ -23,7 +23,7 @@ public class MainTest {
 
         // Устанавливаем параметры для headless режима
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+   //     options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
 
         // Запускаем Chrome с указанными параметрами
         driver = new ChromeDriver(options);
@@ -35,7 +35,7 @@ public class MainTest {
         driver.get("https://www.google.com");
 
         // Проверяем, что элемент поиска присутствует
-        boolean isSearchBoxPresent = driver.findElement(By.name("n")).isDisplayed();
+        boolean isSearchBoxPresent = driver.findElement(By.name("q")).isDisplayed();
         Assert.assertTrue(isSearchBoxPresent, "Поиск не найден на странице");
     }
 
