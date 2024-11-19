@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -17,9 +18,15 @@ public class MainTest {
 
     @BeforeClass
     public void setUp() {
-        // Автоматически загружает драйвер
+        // Устанавливаем драйвер с помощью WebDriverManager
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+
+        // Устанавливаем параметры для headless режима
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+
+        // Запускаем Chrome с указанными параметрами
+        driver = new ChromeDriver(options);
     }
 
     @Test
