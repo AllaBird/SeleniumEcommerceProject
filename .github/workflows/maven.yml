@@ -28,7 +28,7 @@ jobs:
             google-chrome-stable \
             libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxcursor1 \
             libxi6 libxtst6 libxrandr2 libasound2 \
-            libpangocairo-1.0-0 libgtk-3-0
+            libpangocairo-1.0-0 libgtk-3-0 xvfb
 
       - name: Set up ChromeDriver
         run: |
@@ -38,13 +38,22 @@ jobs:
           rm chromedriver_linux64.zip
           echo "$HOME/chromedriver" >> $GITHUB_PATH
 
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1280x1024x24 &
+        env:
+          DISPLAY: ":99.0"
+
       - name: Verify Chrome and ChromeDriver
         run: |
           google-chrome --version
           chromedriver --version
 
-      - name: Build with Maven
+      - name: Build and Test with Maven
         run: mvn -B test --file pom.xml
+        env:
+          DISPLAY: ":99.0"
+
 
 
     
