@@ -45,9 +45,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B test --file pom.xml
-        env:
-          DISPLAY: ":99.0"
-          _JAVA_OPTIONS: "-Dwebdriver.chrome.args=--headless --no-sandbox --disable-dev-shm-usage"
 
 
     
