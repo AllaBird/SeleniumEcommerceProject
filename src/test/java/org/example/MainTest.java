@@ -36,9 +36,10 @@ public class MainTest {
     public void testGoogleSearch() {
         driver.get("https://www.google.com");
 
-        boolean isSearchBoxPresent = driver.findElement(By.name("s")).isDisplayed();
+        boolean isSearchBoxPresent = driver.findElement(By.name("q")).isDisplayed();
 
         Assert.assertTrue(isSearchBoxPresent);
+
     }
 
 
