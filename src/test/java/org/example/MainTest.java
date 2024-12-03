@@ -1,6 +1,5 @@
 package org.example;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,29 +7,33 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 
 public class MainTest {
-    private WebDriver driver;
+    WebDriver driver;
 
-    @BeforeClass
-    public void setUp() {
-        // Устанавливаем драйвер с помощью WebDriverManager
-        WebDriverManager.chromedriver().setup();
-
-        // Получаем параметры Chrome из переменной окружения
+    @BeforeMethod
+    public void newDriver() {
         ChromeOptions options = new ChromeOptions();
-        String chromeOpts = System.getenv("CHROME_OPTS");
+        String chromeOpts = System.getenv("CHROME_OPTIONS");
         if (chromeOpts != null) {
-            options.addArguments(chromeOpts.split(" "));
+            options.addArguments(chromeOpts.split(";"));
         }
-
-        // Запускаем Chrome с указанными параметрами
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver(options); // Передаем options в ChromeDriver
+        driver.get("https://askomdch.com/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(4));
     }
+
+
+    @AfterMethod
+    public void closeDriver() {
+        driver.quit();
+    }
+
 
     @Test
     public void testGoogleSearch() {
